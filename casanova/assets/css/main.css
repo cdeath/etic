@@ -164,9 +164,17 @@ main > *:not(:last-child) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform .3s linear;
+}
+
+.hero:hover img {
+    transform: scale(1.25);
 }
 
 /* SEARCH */
+.search {
+    margin-bottom: 3rem;
+}
 .search label {
     display: flex;
     justify-content: center;
@@ -215,7 +223,7 @@ main > *:not(:last-child) {
 
 .products li h2 {
     font-size: .75rem;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     padding: 1rem;
 }
 

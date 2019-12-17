@@ -24,7 +24,8 @@
     {
       "name": "Tabuleiro de Madeira",
       "image": "assets/images/tabuleiro1.jpg",
-      "stock": 17
+      "stock": 17,
+
     },
     {
       "name": "Candeeiro",
@@ -51,14 +52,17 @@
       "image": "assets/images/cesto.jpg",
       "stock": 4
     }
-  ];
-
-  var productsList = document.querySelector('#products ul');
-  var now = new Date();
+  ],
+  productsList = document.querySelector('#products ul');
+  searchInput = document.querySelector('.search input'),
+  dateRange = document.querySelector('.date-range'),
+  now = new Date(),
+  startDate = new Date(1979, 0, 1),
+  endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
   /* METHODS */
   function renderProduct(product) {
-    productsList.innerHTML += [
+    return [
       '<li>',
         '<a href="products/' + slugify(product.name) + '">',
           '<figure class="ratio ratio-1by1">',
@@ -70,31 +74,34 @@
     ].join('');
   }
 
-  function setCopyrightRange() {
-    var dateRange = document.querySelector('.date-range');
-    var startDate = new Date(2018, 0, 1);
-    var endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-    dateRange.innerHTML += [
+  function searchProducts(evt) {
+    var value = evt.target.value;
+    productsList.innerHTML = products.filter(function (product) {
+      /* 
+        return product.name.indexOf(value) > -1;
+        não serve porque é case-sensitive.
+
+        return product.name.toLowerCase().indexOf(value.toLowerCase()) > -1;
+        é case-insensitive mas não serve porque é é diacritic-sensitive.
+      */
+      return normalize(product.name).indexOf(normalize(value)) > -1;
+      /* o utilitário normalize converte tudo para minúsculas e substitui os acentos */
+    }).map(renderProduct).join('');
+  }
+
+  function setCopyright() {
+    dateRange.innerHTML = [
       '<time datetime="' + startDate.toISOString() + '">' + startDate.getFullYear() + '</time>',
       '-',
       '<time datetime="' + endDate.toISOString() + '">' + endDate.getFullYear() + '</time>',
     ].join(' ');
   }
 
-  /*
-    SEARCH PRODUCTS
-    1) seleccionar o input de pesquisa com .querySelector()
-    2) adicionar um event listener com .addEventListener() do tipo 'keyup' ao input de pesquisa
-    3) passar uma função anónima que recebe o evento
-    4) criar uma variável "value" e atribuir-lhe o valor do input (event.target.value)
-    5) filtrar o array de produtos com o método .filter()
-    6) passar uma função anónima ao método .filter() que recebe o item do array
-    7) retornar o teste se o nome normalizado do item corresponde ao valor normalizado da pesquisa
-    8) a seguir ao .filter() usar o métido .forEach() passando a função renderProduct
-  */
+  /* EVENT LISTENERS */
+  searchInput.addEventListener('input', searchProducts);
 
   /* INIT */
-  products.forEach(renderProduct);
-  setCopyrightRange();
+  productsList.innerHTML = products.map(renderProduct).join('');
+  setCopyright();
 
 })();
