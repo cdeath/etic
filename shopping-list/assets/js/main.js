@@ -212,6 +212,7 @@
     addItem(item);
 
     form.reset();
+    formElements[0].focus();
   }
 
   /*
