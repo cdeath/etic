@@ -94,7 +94,7 @@
 
   function searchProducts(evt) {
     var value = evt.target.value; // ou searchInput.value;
-    productsList.innerHTML = products.filter(function(product) {
+    var html = products.filter(function(product) { // devolve um novo array filtrado
       /* 
         return product.name.indexOf(value) > -1;
         problema: é case-sensitive.
@@ -107,7 +107,11 @@
         ver a função normalize() no topo do ficheiro.
         nota: também é possível validar com o método .includes() em vez de indexOf() > -1;
       */
-    }).map(renderProduct).join('');
+    })
+    .map(renderProduct) // substitui cada item do novo array filtrado pelo HTML do produto
+    .join(''); // junta os items do array numa string
+
+    productsList.innerHTML = html; // altera o HTML da lista pela nova já filtrada pela pesquisa.
   }
 
   function setCopyright() {
