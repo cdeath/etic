@@ -3,10 +3,28 @@
   /* UTILS */
   function normalize(str) {
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    /* 
+      - recebe uma string
+
+      - converte a string para minúsculas com o método .toLowerCase()
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase
+
+      - normaliza caracteres em diferentes línguas com o método .normalize()
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
+
+      - com o método .replace(), substitui os acentos pelo caracter equivalente sem acento.
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+    */
   }
 
   function slugify(str) {
-    return normalize(str).replace(/[\s_-]/g, '-');
+    return normalize(str).replace(/[\s_-]+/g, '-');
+    /*
+      - recebe uma string
+      - normaliza a string com a função normalize já existente
+      - substitui espaços, underscores e hífens repetidos por um só hível.
+      - devolve uma string em minúsculas e sem acentos separadas por hívens para usar como endereço amigável
+    */
   }
 
   /* VARIABLES */
@@ -14,12 +32,12 @@
     {
       "name": "Girafa em Betão Armado",
       "image": "assets/images/animais.jpg",
-      "stock": 7
+      "stock": 7,
     },
     {
       "name": "Campânula",
       "image": "assets/images/campanula.jpg",
-      "stock": 6
+      "stock": 6,
     },
     {
       "name": "Tabuleiro de Madeira",
@@ -30,27 +48,27 @@
     {
       "name": "Candeeiro",
       "image": "assets/images/lamp.jpg",
-      "stock": 7
+      "stock": 7,
     },
     {
       "name": "Quadro",
       "image": "assets/images/quadro.jpg",
-      "stock": 2
+      "stock": 2,
     },
     {
       "name": "Tabuleiro",
       "image": "assets/images/tabuleiro2.jpg",
-      "stock": 0
+      "stock": 0,
     },
     {
       "name": "Spoon Bag",
       "image": "assets/images/spoonbag.jpg",
-      "stock": 5
+      "stock": 5,
     },
     {
       "name": "Cesto",
       "image": "assets/images/cesto.jpg",
-      "stock": 4
+      "stock": 4,
     }
   ],
   productsList = document.querySelector('#products ul');
@@ -75,17 +93,20 @@
   }
 
   function searchProducts(evt) {
-    var value = evt.target.value;
-    productsList.innerHTML = products.filter(function (product) {
+    var value = evt.target.value; // ou searchInput.value;
+    productsList.innerHTML = products.filter(function(product) {
       /* 
         return product.name.indexOf(value) > -1;
-        não serve porque é case-sensitive.
+        problema: é case-sensitive.
 
         return product.name.toLowerCase().indexOf(value.toLowerCase()) > -1;
-        é case-insensitive mas não serve porque é é diacritic-sensitive.
+        problema: é case-insensitive mas é diacritic-sensitive (acentos);
       */
       return normalize(product.name).indexOf(normalize(value)) > -1;
-      /* o utilitário normalize converte tudo para minúsculas e substitui os acentos */
+      /*
+        ver a função normalize() no topo do ficheiro.
+        nota: também é possível validar com o método .includes() em vez de indexOf() > -1;
+      */
     }).map(renderProduct).join('');
   }
 
