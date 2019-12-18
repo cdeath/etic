@@ -9,7 +9,8 @@
   */
   function qs(sel, ctx) {
     ctx = ctx || document;
-    return ctx.querySelector(sel);
+    var elms = ctx.querySelectorAll(sel);
+    return elms.length > 1 ? elms : elms[0];
   }
 
   /*
@@ -297,13 +298,12 @@
     renderiza o HTML da lista caso existam dados guardados
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
   */
-  ul.innerHTML = list.map(function(item) {
-    return renderItem(item);
-  }).join('');
+  ul.innerHTML = list.map(renderItem).join('');
   /*
     outra maneira:
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+
     list.forEach(function(item) {
       ul.innerHTML += renderItem(item);
     });
