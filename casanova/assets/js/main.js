@@ -4,6 +4,8 @@
   function normalize(str) {
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     /* 
+      remove os acentos duma string.
+
       - recebe uma string
 
       - converte a string para minúsculas com o método .toLowerCase()
@@ -20,6 +22,8 @@
   function slugify(str) {
     return normalize(str).replace(/[\s_-]+/g, '-');
     /*
+      converte uma string para um slug (url amigável)
+
       - recebe uma string
       - normaliza a string com a função normalize já existente
       - substitui espaços, underscores e hífens repetidos por um só hível.
@@ -79,22 +83,25 @@
   endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
   /* METHODS */
-  function renderProduct(product) {
+  function renderProduct(item) {
     return [
       '<li>',
-        '<a href="products/' + slugify(product.name) + '">',
+        '<a href="products/' + slugify(item.name) + '">',
           '<figure class="ratio ratio-1by1">',
-            '<img src="' + product.image + '" alt="' + product.name + '" aria-hidden="true">' +
+            '<img src="' + item.image + '" alt="' + item.name + '" aria-hidden="true">' +
           '</figure>',
-          '<h2>' + product.name + '</h2>',
+          '<h2>' + item.name + '</h2>',
         '</a>',
       '</li>',
     ].join('');
   }
 
+  function renderProducts(list) {
+    productsList.innerHTML = list.map(renderProduct).join('');
+  }
+
   function searchProducts(evt) {
-    var value = evt.target.value; // ou searchInput.value;
-    var html = products.filter(function(product) { // devolve um novo array filtrado
+    var searchResults = products.filter(function(product) { // devolve um novo array filtrado
       /* 
         return product.name.indexOf(value) > -1;
         problema: é case-sensitive.
@@ -102,16 +109,13 @@
         return product.name.toLowerCase().indexOf(value.toLowerCase()) > -1;
         problema: é case-insensitive mas é diacritic-sensitive (acentos);
       */
-      return normalize(product.name).indexOf(normalize(value)) > -1;
+      return normalize(product.name).indexOf(normalize(evt.target.value)) > -1;
       /*
         ver a função normalize() no topo do ficheiro.
         nota: também é possível validar com o método .includes() em vez de indexOf() > -1;
       */
-    })
-    .map(renderProduct) // substitui cada item do novo array filtrado pelo HTML do produto
-    .join(''); // junta os items do array numa string
-
-    productsList.innerHTML = html; // altera o HTML da lista pela nova já filtrada pela pesquisa.
+    });
+    renderProducts(searchResults);
   }
 
   function setCopyright() {
@@ -126,7 +130,7 @@
   searchInput.addEventListener('input', searchProducts);
 
   /* INIT */
-  productsList.innerHTML = products.map(renderProduct).join('');
+  renderProducts(products);
   setCopyright();
 
 })();
